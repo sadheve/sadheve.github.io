@@ -287,7 +287,7 @@ whop.track("page");
 
   <!-- Your Botpress Scripts -->
 <!-- Load the WebChat.js Core Script Engine -->
-<script src="https://pages.dev"></script>
+<script src="https://webchat-js.pages.dev/webchat.min.js"></script>
 
 <!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter/Branding, Enable Scrolling -->
 <style>
@@ -329,9 +329,9 @@ whop.track("page");
   }
 
   /* 6. Hide the specific header action buttons (Search, Download, Info) */
-  #sc-win #sc-sound-btn + button, /* Search button */
-  #sc-win #sc-expand-btn + button, /* Download button */
-  #sc-win #sc-export-btn + button, /* Info button */
+  #sc-win #sc-sound-btn + button, 
+  #sc-win #sc-expand-btn + button, 
+  #sc-win #sc-export-btn + button, 
   .sc-ib[title="Search"], 
   .sc-ib[title="Info"],
   .sc-ib[title="Export"],
@@ -371,7 +371,7 @@ whop.track("page");
   }
 </style>
 
-<!-- Initialize the Chat Interface Component -->
+<!-- Initialize the Pure Frontend Client-Side Chat Component -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     new WebChat({
@@ -382,27 +382,33 @@ whop.track("page");
       theme: 'dark',
       lazyLoad: true,
       
-      // Updated message structure with flat icons instead of custom emoji blocks
-      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? ✨ Prompt response available below.', 
+      // Welcome message customized without greeting emojis
+      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? Prompt response available below.', 
       
+      // Pure frontend handler executing API queries securely using your Google Cloud referrer restrictions
       customSubmitHandler: async (userMessage) => {
         try {
-          // Absolute path targeting your serverless Netlify function layout file
-          const res = await fetch('/.netlify/functions/chat', {
+          const apiKey = "AIzaSyD1kkuwuI4hHzHKeOWO452J9UPF3yi3-9Y"; // <-- Paste your domain-restricted Gemini API key here
+          
+          const res = await fetch(`https://googleapis.com{apiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userMessage })
+            body: JSON.stringify({
+              contents: [{
+                parts: [{ text: userMessage + " (Context: Keep your response helpful and add exactly 2 matching emojis at the end of your complete reply.)" }]
+              }]
+            })
           });
           
-          if (!res.ok) throw new Error("Network issues connecting to backend file");
+          if (!res.ok) throw new Error("API authorization failed");
           const data = await res.json();
           
-          // Append exactly 2 context emojis to the text string output returned by Gemini safely
-          return data.reply + " 🚀✨";
+          // Extracts text output cleanly out of Google's direct JSON structure layout
+          return data.candidates[0].content.parts[0].text;
           
         } catch (error) {
-          console.error("Backend Error:", error);
-          return "I am having trouble accessing my remote live connection path right now. Please try again in a brief moment! 🛠️⚠️";
+          console.error("Direct API Call Error:", error);
+          return "I am experiencing unexpected connection parameters right now. Please try submitting your query again in a quick second! 🛠️⚠️";
         }
       }
     });
