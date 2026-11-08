@@ -470,7 +470,7 @@ whop.track("page");
       chatWindow.classList.remove('active');
     });
 
-    // Send message handler
+// Send message handler
     const handleSendMessage = async () => {
       const text = inputField.value.trim();
       if (!text) return;
@@ -483,18 +483,22 @@ whop.track("page");
       const loadingId = appendMessage('Thinking...', 'bot');
 
       try {
-        // REPLACE WITH YOUR ACTUAL VERCEL URL
-       const res = await fetch('https://sadhevegithubio.vercel.app/api/chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ message: text })
-});
+        const res = await fetch('https://sadhevegithubio.vercel.app/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
 
         const data = await res.json();
-        updateMessage(loadingId, data.reply || "I received your message.");
+        
+        if (!res.ok) {
+          throw new Error(data.error || 'Server error occurred');
+        }
+
+        updateMessage(loadingId, data.reply);
       } catch (err) {
         console.error(err);
-        updateMessage(loadingId, "I am experiencing unexpected connection parameters right now. Please try again in a moment! 🛠️⚠️");
+        updateMessage(loadingId, "Error: " + err.message);
       }
     };
 
