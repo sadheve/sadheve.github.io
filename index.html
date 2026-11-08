@@ -287,9 +287,9 @@ whop.track("page");
 
   <!-- Your Botpress Scripts -->
 <!-- Load the WebChat.js Core Script Engine -->
-<script src="https://webchat-js.pages.dev/webchat.min.js"></script>
+<script src="https://pages.dev"></script>
 
-<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter Text -->
+<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter/Branding, Enable Scrolling -->
 <style>
   /* 1. Force a solid orange header layout instead of standard gradients */
   #sc-hdr {
@@ -327,6 +327,48 @@ whop.track("page");
   .sc-cc {
     display: none !important;
   }
+
+  /* 6. Hide the specific header action buttons (Search, Download, Info) */
+  #sc-win #sc-sound-btn + button, /* Search button */
+  #sc-win #sc-expand-btn + button, /* Download button */
+  #sc-win #sc-export-btn + button, /* Info button */
+  .sc-ib[title="Search"], 
+  .sc-ib[title="Info"],
+  .sc-ib[title="Export"],
+  #sc-export-btn,
+  #sc-info-modal {
+    display: none !important;
+  }
+
+  /* 7. Hide the lower branding text layout completely */
+  #sc-brand, .sc-brand {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 8. Fix scrolling parameters to allow smooth container navigation */
+  #sc-msgs {
+    overflow-y: auto !important;
+    max-height: calc(100% - 120px) !important;
+    pointer-events: auto !important;
+  }
+
+  /* 9. Replace robot asset logo with a minimal clean chat support icon */
+  .sc-av svg, .sc-mav svg {
+    display: none !important;
+  }
+  .sc-av::before, .sc-mav::before {
+    content: '';
+    display: block;
+    width: 18px;
+    height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
 </style>
 
 <!-- Initialize the Chat Interface Component -->
@@ -340,17 +382,28 @@ whop.track("page");
       theme: 'dark',
       lazyLoad: true,
       
-      // Removed greeting emojis explicitly from layout string
-      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?', 
+      // Updated message structure with flat icons instead of custom emoji blocks
+      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? ✨ Prompt response available below.', 
       
       customSubmitHandler: async (userMessage) => {
-        const res = await fetch('/.netlify/functions/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage })
-        });
-        const data = await res.json();
-        return data.reply;
+        try {
+          // Absolute path targeting your serverless Netlify function layout file
+          const res = await fetch('/.netlify/functions/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+          });
+          
+          if (!res.ok) throw new Error("Network issues connecting to backend file");
+          const data = await res.json();
+          
+          // Append exactly 2 context emojis to the text string output returned by Gemini safely
+          return data.reply + " 🚀✨";
+          
+        } catch (error) {
+          console.error("Backend Error:", error);
+          return "I am having trouble accessing my remote live connection path right now. Please try again in a brief moment! 🛠️⚠️";
+        }
       }
     });
   });
