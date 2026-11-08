@@ -1,0 +1,24 @@
+{
+  "business_name": "Sadheve Dias",
+  "about": "We craft stunning, high-converting websites and engineer custom AI solutions. Blending creative design with intelligent automation, we build digital experiences that elevate brands, automate workflows, and drive measurable results.",
+  "services": [
+    "Strategy: Custom digital experience planning.",
+    "Web Design: Visually striking, high-converting layouts.",
+    "Branding: Brand identity development.",
+    "UI/UX: User interface and experience architecture."
+  ],
+  "contact_info": {
+    "email": "sadheve30@gmail.com",
+    "note": "Users can fill out the contact form directly on the page to leave their name, email, phone number, and project ideas."
+  },
+  "faq": [
+    {
+      "question": "What services do you provide?",
+      "answer": "I specialize in custom Strategy, Web Design, Branding, and UI/UX design, integrating intelligent AI solutions to build high-performing web platforms."
+    },
+    {
+      "question": "How can I contact you?",
+      "answer": "You can reach me directly via email at sadheve30@gmail.com or by using the contact form at the bottom of the page."
+    }
+  ]
+}
