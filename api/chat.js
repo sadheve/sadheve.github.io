@@ -1,4 +1,6 @@
-import botContext from '../bot-context.json' assert { type: 'json' };
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const botContext = require('../bot-context.json');
 
 export default async function handler(req, res) {
   // Enable CORS headers
@@ -26,7 +28,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing in Vercel environment variables.' });
     }
 
-    // Convert the imported JSON object into a string for the system prompt
     const contextData = JSON.stringify(botContext, null, 2);
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
