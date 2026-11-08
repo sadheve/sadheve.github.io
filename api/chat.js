@@ -55,8 +55,8 @@ export default async function handler(req, res) {
 
     const contextData = JSON.stringify(botContext);
     
-    // Using gemini-1.5-flash as specified by the API response
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // Using the stable v1 API version and gemini-3.8-flash
+    const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(endpoint, {
       method: 'POST',
