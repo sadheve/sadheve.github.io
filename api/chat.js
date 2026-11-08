@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -56,14 +57,14 @@ export default async function handler(req, res) {
     const contextData = JSON.stringify(botContext);
     const promptText = `System Context & Business Data:\n${contextData}\n\nUser Question: ${message}\n\nInstructions: You are the professional AI support assistant for Sadheve Dias Portfolio website. Answer questions concisely and accurately using the business data provided above.`;
 
-    // List of models to try in order of preference if one is overloaded
-    const models = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+    // Try gemini-2.5-flash first, fallback to gemini-2.0-flash
+    const supportedModels = ['gemini-2.5-flash', 'gemini-2.0-flash'];
     let botReply = null;
     let lastError = null;
 
-    for (const model of models) {
+    for (const model of supportedModels) {
       try {
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const endpoint = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
         
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
           botReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (botReply) break;
         } else {
-          lastError = data.error?.message || `API error with ${model}`;
+          lastError = data.error?.message || `Error with model ${model}`;
         }
       } catch (err) {
         lastError = err.message;
@@ -87,7 +88,7 @@ export default async function handler(req, res) {
     }
 
     if (!botReply) {
-      return res.status(500).json({ error: lastError || 'Gemini models are temporarily overloaded. Please try again in a moment.' });
+      return res.status(500).json({ error: lastError || 'Failed to generate response from Gemini API.' });
     }
 
     return res.status(200).json({ reply: botReply });
