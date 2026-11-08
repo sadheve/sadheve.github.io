@@ -321,9 +321,12 @@ whop.track("page");
     font-size: 12px !important;
   }
 
-  /* Hides ONLY the exact 0/1000 character numeric text digits */
+  /* Safe Hiding: Make only the 0/1000 counter digits invisible without collapsing the structural row wrapper */
   .sc-cc {
-    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    font-size: 0 !important;
   }
 </style>
 
@@ -354,6 +357,7 @@ whop.track("page");
 
 <!-- Visual placeholder rendering the chat widget interface launcher -->
 <div id="webchat-container"></div>
+
 
 <!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
 	
