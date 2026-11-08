@@ -287,7 +287,45 @@ whop.track("page");
 
   <!-- Your Botpress Scripts -->
 <!-- Load the WebChat.js Client Engine Engine -->
-<script src="https://webchat-js.pages.dev/webchat.min.js"></script>
+<script src="https://pages.dev"></script>
+
+<!-- Custom CSS Overrides to Remove Gradients, Emojis, and Shrink Chat Bubbles -->
+<style>
+  /* Force a solid orange layout header instead of a gradient */
+  #sc-hdr {
+    background: #e85b24 !important;
+    box-shadow: none !important;
+  }
+  #sc-hdr::before {
+    display: none !important;
+  }
+
+  /* Force solid orange background colors for the toggle buttons */
+  #sc-toggle, #sc-send, .sc-mav {
+    background: #e85b24 !important;
+    background-image: none !important;
+  }
+
+  /* Make user chat bubbles a compact solid orange without gradients */
+  .sc-bbl.u {
+    background: #e85b24 !important;
+    background-image: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    padding: 8px 12px !important; 
+    font-size: 12px !important;
+  }
+
+  /* Make bot chat bubbles slightly smaller and more compact */
+  .sc-bbl.b {
+    padding: 8px 12px !important; 
+    font-size: 12px !important;
+  }
+
+  /* Hides the character counter container row completely */
+  .sc-footer-row {
+    display: none !important;
+  }
+</style>
 
 <!-- Connect the Widget to your Hidden Serverless Backend Function -->
 <script>
@@ -295,12 +333,12 @@ whop.track("page");
     new WebChat({
       elementId: 'webchat-container',
       botName: 'AI Assistant',
-      primaryColor: '#e85b24', // Accent color perfectly matching your layout graphics
-      accentColor: '#ffffff',
+      primaryColor: '#e85b24', 
+      accentColor: '#e85b24', 
       theme: 'dark',
       lazyLoad: true,
+      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?', 
       
-      // Forces the chat element to request answers from your backend file instead of leaking keys
       customSubmitHandler: async (userMessage) => {
         const res = await fetch('/.netlify/functions/chat', {
           method: 'POST',
