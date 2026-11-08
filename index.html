@@ -323,8 +323,8 @@ whop.track("page");
     bottom: 100px !important;
     right: 30px !important;
     width: 360px !important;
-    height: 480px !important;
-    max-height: calc(100vh - 140px) !important;
+    height: 520px !important;
+    max-height: calc(100vh - 120px) !important;
     background: #121212 !important;
     border: 1px solid rgba(232, 91, 36, 0.3) !important;
     border-radius: 12px !important;
@@ -396,6 +396,36 @@ whop.track("page");
     border-bottom-right-radius: 2px !important;
   }
 
+  /* Suggestions Pills Container */
+  .pch-suggestions {
+    padding: 8px 12px !important;
+    background: #171717 !important;
+    display: flex !important;
+    gap: 6px !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    border-top: 1px solid #282828 !important;
+  }
+  .pch-suggestions::-webkit-scrollbar {
+    display: none;
+  }
+  .pch-suggestion-chip {
+    background: #262626 !important;
+    border: 1px solid #444 !important;
+    color: #ccc !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+  }
+  .pch-suggestion-chip:hover {
+    background: #e85b24 !important;
+    color: white !important;
+    border-color: #e85b24 !important;
+  }
+
   /* Chat Input Area */
   .pch-input-area {
     padding: 12px !important;
@@ -426,6 +456,25 @@ whop.track("page");
     font-weight: bold !important;
     cursor: pointer !important;
   }
+
+  /* Mobile Responsive Adjustments */
+  @media (max-width: 768px) {
+    #portfolio-chat-toggle {
+      bottom: 90px !important; /* Lifts toggle button above bottom navigation bar */
+      right: 16px !important;
+    }
+    #portfolio-chat-window {
+      bottom: 0 !important;
+      right: 0 !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+  }
 </style>
 
 <!-- Native Embedded Chat Widget Markup & Logic -->
@@ -442,6 +491,14 @@ whop.track("page");
     <div class="pch-messages" id="pch-messages">
       <div class="pch-msg bot">Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?</div>
     </div>
+    
+    <!-- Quick Suggestion Chips -->
+    <div class="pch-suggestions">
+      <button class="pch-suggestion-chip" data-text="What services do you offer?">⚡ What services do you offer?</button>
+      <button class="pch-suggestion-chip" data-text="How can I contact you?">📧 How can I contact you?</button>
+      <button class="pch-suggestion-chip" data-text="Tell me about your projects">🚀 Tell me about your projects</button>
+    </div>
+
     <div class="pch-input-area">
       <input type="text" class="pch-input" id="pch-input-field" placeholder="Type a message..." />
       <button class="pch-send" id="pch-send-btn">Send</button>
@@ -457,6 +514,7 @@ whop.track("page");
     const sendBtn = document.getElementById('pch-send-btn');
     const inputField = document.getElementById('pch-input-field');
     const messagesContainer = document.getElementById('pch-messages');
+    const suggestionChips = document.querySelectorAll('.pch-suggestion-chip');
 
     // Toggle window visibility
     toggleBtn.addEventListener('click', () => {
@@ -470,9 +528,9 @@ whop.track("page");
       chatWindow.classList.remove('active');
     });
 
-// Send message handler
-    const handleSendMessage = async () => {
-      const text = inputField.value.trim();
+    // Send message core handler
+    const submitMessage = async (textToSend) => {
+      const text = textToSend || inputField.value.trim();
       if (!text) return;
 
       // Append User Message
@@ -502,9 +560,17 @@ whop.track("page");
       }
     };
 
-    sendBtn.addEventListener('click', handleSendMessage);
+    sendBtn.addEventListener('click', () => submitMessage());
     inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleSendMessage();
+      if (e.key === 'Enter') submitMessage();
+    });
+
+    // Handle suggestion chip clicks
+    suggestionChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const queryText = chip.getAttribute('data-text');
+        submitMessage(queryText);
+      });
     });
 
     function appendMessage(text, sender) {
