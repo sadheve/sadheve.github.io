@@ -287,7 +287,7 @@ whop.track("page");
 
   <!-- Your Botpress Scripts -->
 <!-- Load the WebChat.js Core Script Engine -->
-<script src="https://pages.dev"></script>
+<script src="https://cdn.jsdelivr.net/npm/@botpress/webchat@0.2.3/dist/webchat.js"></script>
 
 <!-- Clean CSS Rules: Layering Firewalls, Small Bubbles, No Counter/Branding, Custom Icons, Hide Buttons -->
 <style>
@@ -404,7 +404,7 @@ whop.track("page");
     display: block;
     width: 20px;
     height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
@@ -425,14 +425,19 @@ whop.track("page");
       
       customSubmitHandler: async (userMessage) => {
         try {
-          const res = await fetch('https://vercel.app', {
+          // Replace with your actual live Vercel deployment URL
+          const res = await fetch('https://YOUR-ACTUAL-APP-NAME.vercel.app/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: userMessage })
           });
+          
+          if (!res.ok) throw new Error('Network response was not ok');
+          
           const data = await res.json();
           return data.reply;
         } catch (error) {
+          console.error("Chat error:", error);
           return "I am experiencing unexpected connection parameters right now. Please try submitting your query again in a quick second! 🛠️⚠️";
         }
       }
@@ -442,7 +447,6 @@ whop.track("page");
 
 <!-- The visual placeholder targeting where the widget button mounts -->
 <div id="webchat-container"></div>
-
 <!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
 	
 <div id="webchat-container"></div>
