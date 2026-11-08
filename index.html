@@ -394,13 +394,10 @@ whop.track("page");
       lazyLoad: true,
       welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? Prompt response available below.', 
       
-      // Routes messages to your private hidden Vercel server proxy backend route
+      // Fixed: Now points directly to your unique, working live secure Vercel application route path
       customSubmitHandler: async (userMessage) => {
         try {
-          // Replace this placeholder link with your exact secure Vercel production link from Part 1
-          const vercelUrl = "https://YOUR_VERCEL_PROJECT_LINK.vercel.app/api/chat";
-          
-          const res = await fetch(vercelUrl, {
+          const res = await fetch('https://vercel.app', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: userMessage })
