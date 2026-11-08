@@ -1,9 +1,5 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const botContext = require('../bot-context.json');
-
 export default async function handler(req, res) {
-  // Always set CORS headers first thing
+  // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -12,10 +8,8 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Handle preflight OPTIONS request immediately
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -35,6 +29,32 @@ export default async function handler(req, res) {
       res.setHeader('Content-Type', 'application/json');
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing in Vercel environment variables.' });
     }
+
+    // Inline bot context to completely prevent Vercel file-system reading crashes
+    const botContext = {
+      "business_name": "Sadheve Dias",
+      "about": "We craft stunning, high-converting websites and engineer custom AI solutions. Blending creative design with intelligent automation, we build digital experiences that elevate brands, automate workflows, and drive measurable results.",
+      "services": [
+        "Strategy: Custom digital experience planning.",
+        "Web Design: Visually striking, high-converting layouts.",
+        "Branding: Brand identity development.",
+        "UI/UX: User interface and experience architecture."
+      ],
+      "contact_info": {
+        "email": "sadheve30@gmail.com",
+        "note": "Users can fill out the contact form directly on the page to leave their name, email, phone number, and project ideas."
+      },
+      "faq": [
+        {
+          "question": "What services do you provide?",
+          "answer": "I specialize in custom Strategy, Web Design, Branding, and UI/UX design, integrating intelligent AI solutions to build high-performing web platforms."
+        },
+        {
+          "question": "How can I contact you?",
+          "answer": "You can reach me directly via email at sadheve30@gmail.com or by using the contact form at the bottom of the page."
+        }
+      ]
+    };
 
     const contextData = JSON.stringify(botContext, null, 2);
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
