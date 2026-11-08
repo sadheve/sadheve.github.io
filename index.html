@@ -286,167 +286,243 @@ whop.track("page");
 	<div id="webchat-container"></div>
 
   <!-- Your Botpress Scripts -->
-<!-- Load the WebChat.js Core Script Engine -->
-<script src="https://cdn.jsdelivr.net/npm/@botpress/webchat@0.2.3/dist/webchat.js"></script>
-
-<!-- Clean CSS Rules: Layering Firewalls, Small Bubbles, No Counter/Branding, Custom Icons, Hide Buttons -->
+<!-- Custom Floating Chat Widget Styles -->
 <style>
-  /* ROOT LAYER FORCE: Ensure the wrapper element floats on the true top screen layout */
-  body #webchat-container, 
-  html body div#webchat-container {
+  /* Floating Toggle Button */
+  #portfolio-chat-toggle {
     position: fixed !important;
     bottom: 30px !important;
     right: 30px !important;
-    width: auto !important;
-    height: auto !important;
-    z-index: 2147483647 !important; /* Maximum possible browser layer height */
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Force the round toggle icon to display correctly at the bottom right corner */
-  body #sc-toggle, 
-  html body button#sc-toggle {
-    position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
+    width: 56px !important;
+    height: 56px !important;
     z-index: 2147483647 !important;
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    background: #e85b24 !important;
-    background-image: none !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
-  }
-
-  /* Force a solid orange header layout instead of standard gradients */
-  #sc-hdr {
-    background: #e85b24 !important;
-    background-image: none !important;
-    box-shadow: none !important;
-  }
-  #sc-hdr::before {
-    display: none !important;
-  }
-
-  /* Convert interface action triggers to flat solid orange */
-  #sc-send, .sc-mav {
-    background: #e85b24 !important;
-    background-image: none !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-  }
-
-  /* Compact user chat bubble scaling (No Gradients) */
-  .sc-bbl.u {
-    background: #e85b24 !important;
-    background-image: none !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
-    padding: 8px 12px !important; 
-    font-size: 12.5px !important;
-  }
-
-  /* Compact bot chat bubble scaling */
-  .sc-bbl.b {
-    padding: 8px 12px !important; 
-    font-size: 12.5px !important;
-  }
-
-  /* Hides character counter numerical digits */
-  .sc-cc {
-    display: none !important;
-  }
-
-  /* Thoroughly hide header extra buttons (Search, Download, Info, AND Expand) */
-  #sc-win #sc-sound-btn + button, 
-  #sc-win #sc-expand-btn,
-  #sc-expand-btn,
-  #sc-win #sc-export-btn + button, 
-  .sc-ib[title="Search"], 
-  .sc-ib[title="Info"],
-  .sc-ib[title="Export"],
-  .sc-ib[title="Expand"],
-  .sc-ib[title="Minimize"] + button,
-  #sc-export-btn,
-  #sc-info-modal {
-    display: none !important;
-  }
-
-  /* Hide the lower branding text layout completely */
-  #sc-brand, .sc-brand {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Fix scrolling parameters to allow smooth container navigation */
-  #sc-msgs {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    max-height: calc(100% - 120px) !important;
-    pointer-events: auto !important;
-  }
-
-  /* Replace robot asset logo with a minimal clean chat support icon */
-  .sc-av img, .sc-av svg, .sc-mav svg, .sc-av-img {
-    display: none !important;
-  }
-  .sc-av, .sc-mav {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     background: #e85b24 !important;
+    border: none !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+    cursor: pointer !important;
+    transition: transform 0.2s ease !important;
   }
-  .sc-av::before, .sc-mav::before {
-    content: '';
-    display: block;
-    width: 20px;
-    height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
+  #portfolio-chat-toggle:hover {
+    transform: scale(1.05);
+  }
+  #portfolio-chat-toggle svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+    stroke-width: 2.5;
+    fill: none;
+  }
+
+  /* Chat Window Container */
+  #portfolio-chat-window {
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 30px !important;
+    width: 360px !important;
+    height: 480px !important;
+    max-height: calc(100vh - 140px) !important;
+    background: #121212 !important;
+    border: 1px solid rgba(232, 91, 36, 0.3) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6) !important;
+    z-index: 2147483646 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    font-family: inherit !important;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  #portfolio-chat-window.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* Chat Header */
+  .pch-header {
+    background: #e85b24 !important;
+    color: white !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+  }
+  .pch-close {
+    background: none !important;
+    border: none !important;
+    color: white !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+  }
+
+  /* Chat Messages Area */
+  .pch-messages {
+    flex: 1 !important;
+    padding: 16px !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* Chat Bubbles */
+  .pch-msg {
+    max-width: 80% !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    border-radius: 8px !important;
+    word-break: break-word !important;
+  }
+  .pch-msg.bot {
+    background: #222 !important;
+    color: #eee !important;
+    align-self: flex-start !important;
+    border-bottom-left-radius: 2px !important;
+  }
+  .pch-msg.user {
+    background: #e85b24 !important;
+    color: white !important;
+    align-self: flex-end !important;
+    border-bottom-right-radius: 2px !important;
+  }
+
+  /* Chat Input Area */
+  .pch-input-area {
+    padding: 12px !important;
+    background: #1a1a1a !important;
+    border-top: 1px solid #333 !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+  .pch-input {
+    flex: 1 !important;
+    background: #2a2a2a !important;
+    border: 1px solid #444 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    color: white !important;
+    font-size: 13px !important;
+    outline: none !important;
+  }
+  .pch-input:focus {
+    border-color: #e85b24 !important;
+  }
+  .pch-send {
+    background: #e85b24 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: white !important;
+    padding: 0 14px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
   }
 </style>
 
-<!-- Initialize the Secure Proxy Component -->
+<!-- Native Embedded Chat Widget Markup & Logic -->
+<div id="portfolio-chat-container">
+  <button id="portfolio-chat-toggle" aria-label="Open Chat">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  </button>
+
+  <div id="portfolio-chat-window">
+    <div class="pch-header">
+      <span>AI Assistant</span>
+      <button class="pch-close" id="pch-close-btn">&times;</button>
+    </div>
+    <div class="pch-messages" id="pch-messages">
+      <div class="pch-msg bot">Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?</div>
+    </div>
+    <div class="pch-input-area">
+      <input type="text" class="pch-input" id="pch-input-field" placeholder="Type a message..." />
+      <button class="pch-send" id="pch-send-btn">Send</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    new WebChat({
-      elementId: 'webchat-container',
-      botName: 'AI Assistant',
-      primaryColor: '#e85b24', 
-      accentColor: '#e85b24', 
-      theme: 'dark',
-      lazyLoad: true,
-      welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? Prompt response available below.', 
-      
-      customSubmitHandler: async (userMessage) => {
-        try {
-          // Replace with your actual live Vercel deployment URL
-          const res = await fetch('https://YOUR-ACTUAL-APP-NAME.vercel.app/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userMessage })
-          });
-          
-          if (!res.ok) throw new Error('Network response was not ok');
-          
-          const data = await res.json();
-          return data.reply;
-        } catch (error) {
-          console.error("Chat error:", error);
-          return "I am experiencing unexpected connection parameters right now. Please try submitting your query again in a quick second! 🛠️⚠️";
-        }
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('portfolio-chat-toggle');
+    const chatWindow = document.getElementById('portfolio-chat-window');
+    const closeBtn = document.getElementById('pch-close-btn');
+    const sendBtn = document.getElementById('pch-send-btn');
+    const inputField = document.getElementById('pch-input-field');
+    const messagesContainer = document.getElementById('pch-messages');
+
+    // Toggle window visibility
+    toggleBtn.addEventListener('click', () => {
+      chatWindow.classList.toggle('active');
+      if (chatWindow.classList.contains('active')) {
+        inputField.focus();
       }
     });
+
+    closeBtn.addEventListener('click', () => {
+      chatWindow.classList.remove('active');
+    });
+
+    // Send message handler
+    const handleSendMessage = async () => {
+      const text = inputField.value.trim();
+      if (!text) return;
+
+      // Append User Message
+      appendMessage(text, 'user');
+      inputField.value = '';
+
+      // Append Loading Bubble
+      const loadingId = appendMessage('Thinking...', 'bot');
+
+      try {
+        // REPLACE WITH YOUR ACTUAL VERCEL URL
+        const res = await fetch('https://sadhevegithubio.vercel.app/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await res.json();
+        updateMessage(loadingId, data.reply || "I received your message.");
+      } catch (err) {
+        console.error(err);
+        updateMessage(loadingId, "I am experiencing unexpected connection parameters right now. Please try again in a moment! 🛠️⚠️");
+      }
+    };
+
+    sendBtn.addEventListener('click', handleSendMessage);
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSendMessage();
+    });
+
+    function appendMessage(text, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `pch-msg ${sender}`;
+      msgDiv.textContent = text;
+      const id = 'msg-' + Date.now() + Math.random();
+      msgDiv.id = id;
+      messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return id;
+    }
+
+    function updateMessage(id, text) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = text;
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
   });
 </script>
-
-<!-- The visual placeholder targeting where the widget button mounts -->
-<div id="webchat-container"></div>
 <!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
 	
 <div id="webchat-container"></div>
