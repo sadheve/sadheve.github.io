@@ -484,11 +484,11 @@ whop.track("page");
 
       try {
         // REPLACE WITH YOUR ACTUAL VERCEL URL
-        const res = await fetch('https://sadhevegithubio.vercel.app/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
-        });
+       const res = await fetch('https://sadhevegithub-qkzklnll6-sadheve30-2868s-projects.vercel.app/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: text })
+});
 
         const data = await res.json();
         updateMessage(loadingId, data.reply || "I received your message.");
