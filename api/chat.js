@@ -11,36 +11,32 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
-  // Block any non-POST requests to ensure security
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
     const { message } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY; // Safely reads your key inside the secure server vault
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured on Vercel environment variables.' });
+      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured on Vercel.' });
     }
 
     // Load context data from bot-context.json safely
     let contextData = '';
     try {
       const filePath = path.join(process.cwd(), 'bot-context.json');
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      contextData = fileContents;
+      contextData = fs.readFileSync(filePath, 'utf8');
     } catch (err) {
       console.warn('Could not read bot-context.json:', err);
     }
 
-    // Secure server-to-server call directly to the Google Gemini API endpoint
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(endpoint, {
@@ -61,9 +57,7 @@ export default async function handler(req, res) {
       throw new Error(data.error?.message || 'Failed to communicate with Gemini API');
     }
 
-    // Extract the text output safely from the Gemini layout structure
     const botReply = data.candidates[0].content.parts[0].text;
-
     return res.status(200).json({ reply: botReply });
 
   } catch (error) {
