@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 export default async function handler(req, res) {
-  // Enable CORS for your portfolio domain
+  // Enable CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -12,8 +12,7 @@ export default async function handler(req, res) {
   );
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
@@ -25,10 +24,10 @@ export default async function handler(req, res) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-      return res.status(500).json({ error: 'GEMINI_API_KEY is not configured on Vercel.' });
+      return res.status(500).json({ error: 'GEMINI_API_KEY is missing in Vercel environment variables.' });
     }
 
-    // Load context data from bot-context.json safely
+    // Read bot-context.json from the root directory
     let contextData = '';
     try {
       const filePath = path.join(process.cwd(), 'bot-context.json');
@@ -57,7 +56,7 @@ export default async function handler(req, res) {
       throw new Error(data.error?.message || 'Failed to communicate with Gemini API');
     }
 
-    const botReply = data.candidates[0].content.parts[0].text;
+    const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't generate a response.";
     return res.status(200).json({ reply: botReply });
 
   } catch (error) {
