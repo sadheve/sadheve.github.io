@@ -13,7 +13,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Safely parse request body whether it's an object or string
     let body = req.body;
     if (typeof body === 'string') {
       try { body = JSON.parse(body); } catch (e) { body = {}; }
@@ -55,7 +54,9 @@ export default async function handler(req, res) {
     };
 
     const contextData = JSON.stringify(botContext);
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    
+    // Updated to gemini-2.0-flash
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
     
     const response = await fetch(endpoint, {
       method: 'POST',
