@@ -54,31 +54,40 @@ export default async function handler(req, res) {
     };
 
     const contextData = JSON.stringify(botContext);
-    
-    // Using the stable v1 API version and gemini-3.8-flash
-    const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
-    
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ 
-            text: `System Context & Business Data:\n${contextData}\n\nUser Question: ${message}\n\nInstructions: You are the professional AI support assistant for Sadheve Dias Portfolio website. Answer questions concisely and accurately using the business data provided above.` 
-          }]
-        }]
-      })
-    });
+    const promptText = `System Context & Business Data:\n${contextData}\n\nUser Question: ${message}\n\nInstructions: You are the professional AI support assistant for Sadheve Dias Portfolio website. Answer questions concisely and accurately using the business data provided above.`;
 
-    const data = await response.json();
+    // List of models to try in order of preference if one is overloaded
+    const models = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+    let botReply = null;
+    let lastError = null;
 
-    if (!response.ok) {
-      return res.status(500).json({ error: data.error?.message || 'Gemini API communication failed.' });
+    for (const model of models) {
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          botReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (botReply) break;
+        } else {
+          lastError = data.error?.message || `API error with ${model}`;
+        }
+      } catch (err) {
+        lastError = err.message;
+      }
     }
 
-    const botReply = data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!botReply) {
-      return res.status(500).json({ error: 'No response generated from Gemini.' });
+      return res.status(500).json({ error: lastError || 'Gemini models are temporarily overloaded. Please try again in a moment.' });
     }
 
     return res.status(200).json({ reply: botReply });
