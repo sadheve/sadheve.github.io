@@ -291,10 +291,10 @@ whop.track("page");
   /* Floating Toggle Button */
   #portfolio-chat-toggle {
     position: fixed !important;
-    bottom: 30px !important;
-    right: 30px !important;
-    width: 56px !important;
-    height: 56px !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    width: 52px !important;
+    height: 52px !important;
     z-index: 2147483647 !important;
     display: flex !important;
     align-items: center !important;
@@ -320,15 +320,15 @@ whop.track("page");
   /* Chat Window Container */
   #portfolio-chat-window {
     position: fixed !important;
-    bottom: 100px !important;
-    right: 30px !important;
-    width: 360px !important;
-    height: 520px !important;
-    max-height: calc(100vh - 120px) !important;
+    bottom: 85px !important;
+    right: 20px !important;
+    width: 380px !important;
+    height: 560px !important;
+    max-height: calc(100vh - 100px) !important;
     background: #121212 !important;
     border: 1px solid rgba(232, 91, 36, 0.3) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.6) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.7) !important;
     z-index: 2147483646 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -371,29 +371,81 @@ whop.track("page");
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 14px !important;
+  }
+
+  /* Message wrappers */
+  .pch-msg-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+  }
+  .pch-msg-wrapper.bot {
+    align-self: flex-start;
+  }
+  .pch-msg-wrapper.user {
+    align-self: flex-end;
   }
 
   /* Chat Bubbles */
   .pch-msg {
-    max-width: 80% !important;
     padding: 10px 14px !important;
     font-size: 13px !important;
-    line-height: 1.4 !important;
+    line-height: 1.45 !important;
     border-radius: 8px !important;
     word-break: break-word !important;
   }
   .pch-msg.bot {
     background: #222 !important;
     color: #eee !important;
-    align-self: flex-start !important;
     border-bottom-left-radius: 2px !important;
   }
   .pch-msg.user {
     background: #e85b24 !important;
     color: white !important;
-    align-self: flex-end !important;
     border-bottom-right-radius: 2px !important;
+  }
+
+  /* Action bar under bot messages (Icon only buttons) */
+  .pch-msg-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    padding-left: 2px;
+  }
+  .pch-action-btn {
+    background: #1c1c1c;
+    border: 1px solid #333;
+    color: #aaa;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .pch-action-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+  .pch-action-btn:hover {
+    background: #2a2a2a;
+    color: #fff;
+    border-color: #555;
+  }
+  .pch-action-btn.active-like {
+    color: #4ade80;
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .pch-action-btn.active-dislike {
+    color: #f87171;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
   }
 
   /* Suggestions Pills Container */
@@ -457,11 +509,11 @@ whop.track("page");
     cursor: pointer !important;
   }
 
-  /* Mobile Responsive Adjustments */
+  /* Mobile Responsive Full-Screen */
   @media (max-width: 768px) {
     #portfolio-chat-toggle {
-      bottom: 90px !important; /* Lifts toggle button above bottom navigation bar */
-      right: 16px !important;
+      bottom: 20px !important;
+      right: 20px !important;
     }
     #portfolio-chat-window {
       bottom: 0 !important;
@@ -489,14 +541,18 @@ whop.track("page");
       <button class="pch-close" id="pch-close-btn">&times;</button>
     </div>
     <div class="pch-messages" id="pch-messages">
-      <div class="pch-msg bot">Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?</div>
+      <div class="pch-msg-wrapper bot">
+        <div class="pch-msg bot">Welcome to Sadheve Dias Portfolio! 💼 I am here to answer any questions you have about what we do. How can I help you today?</div>
+      </div>
     </div>
     
-    <!-- Quick Suggestion Chips -->
+    <!-- 5 Quick Suggestion Chips -->
     <div class="pch-suggestions">
-      <button class="pch-suggestion-chip" data-text="What services do you offer?">⚡ What services do you offer?</button>
-      <button class="pch-suggestion-chip" data-text="How can I contact you?">📧 How can I contact you?</button>
-      <button class="pch-suggestion-chip" data-text="Tell me about your projects">🚀 Tell me about your projects</button>
+      <button class="pch-suggestion-chip" data-text="What services do you offer?">What services do you offer?</button>
+      <button class="pch-suggestion-chip" data-text="How can I contact you?">How can I contact you?</button>
+      <button class="pch-suggestion-chip" data-text="Tell me about your projects">Tell me about your projects</button>
+      <button class="pch-suggestion-chip" data-text="Who is Sadheve Dias?">Who is Sadheve Dias?</button>
+      <button class="pch-suggestion-chip" data-text="What tech stack do you use?">What tech stack do you use?</button>
     </div>
 
     <div class="pch-input-area">
@@ -538,7 +594,7 @@ whop.track("page");
       inputField.value = '';
 
       // Append Loading Bubble
-      const loadingId = appendMessage('Thinking...', 'bot');
+      const loadingId = appendMessage('Thinking...', 'bot', true);
 
       try {
         const res = await fetch('https://sadhevegithubio.vercel.app/api/chat', {
@@ -573,21 +629,161 @@ whop.track("page");
       });
     });
 
-    function appendMessage(text, sender) {
+    // Format text: parses bold (**text**) and bullet points (* or -)
+    function formatMessageText(text) {
+      let escaped = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Bold: **text** -> <strong>text</strong>
+      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+      let lines = escaped.split('\n');
+      let inList = false;
+      let htmlResult = '';
+
+      for (let line of lines) {
+        let trimmed = line.trim();
+        if (trimmed.startsWith('* ') || trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+          if (!inList) {
+            htmlResult += '<ul style="margin: 6px 0 6px 16px; padding-left: 0;">';
+            inList = true;
+          }
+          let content = trimmed.substring(2);
+          htmlResult += `<li style="margin-bottom: 4px;">${content}</li>`;
+        } else {
+          if (inList) {
+            htmlResult += '</ul>';
+            inList = false;
+          }
+          if (trimmed === '') {
+            htmlResult += '<br>';
+          } else {
+            htmlResult += `<div style="margin-bottom: 4px;">${trimmed}</div>`;
+          }
+        }
+      }
+      if (inList) {
+        htmlResult += '</ul>';
+      }
+      return htmlResult;
+    }
+
+    // Speech Synthesis for Read Aloud
+    function speakText(rawText) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(rawText);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert('Speech synthesis is not supported in your browser.');
+      }
+    }
+
+    function appendMessage(text, sender, isLoading = false) {
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = `pch-msg-wrapper ${sender}`;
+
       const msgDiv = document.createElement('div');
       msgDiv.className = `pch-msg ${sender}`;
-      msgDiv.textContent = text;
+      
+      if (isLoading) {
+        msgDiv.textContent = text;
+      } else {
+        msgDiv.innerHTML = formatMessageText(text);
+      }
+
       const id = 'msg-' + Date.now() + Math.random();
-      msgDiv.id = id;
-      messagesContainer.appendChild(msgDiv);
+      wrapperDiv.id = id;
+      wrapperDiv.appendChild(msgDiv);
+
+      // Add Icon-Only Action Buttons (Read Aloud, Like, Dislike) for Bot responses only
+      if (sender === 'bot' && !isLoading) {
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'pch-msg-actions';
+
+        // Read Aloud Icon Button (Speaker SVG)
+        const speakBtn = document.createElement('button');
+        speakBtn.className = 'pch-action-btn';
+        speakBtn.title = 'Read Aloud';
+        speakBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07l-1.41-1.42a3 3 0 0 0 0-4.24l1.41-1.41z"/></svg>';
+        speakBtn.onclick = () => speakText(text);
+
+        // Like Icon Button (Thumbs Up SVG)
+        const likeBtn = document.createElement('button');
+        likeBtn.className = 'pch-action-btn';
+        likeBtn.title = 'Like';
+        likeBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3z"/></svg>';
+        likeBtn.onclick = () => {
+          likeBtn.classList.toggle('active-like');
+          dislikeBtn.classList.remove('active-dislike');
+        };
+
+        // Dislike Icon Button (Thumbs Down SVG)
+        const dislikeBtn = document.createElement('button');
+        dislikeBtn.className = 'pch-action-btn';
+        dislikeBtn.title = 'Dislike';
+        dislikeBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3z"/></svg>';
+        dislikeBtn.onclick = () => {
+          dislikeBtn.classList.toggle('active-dislike');
+          likeBtn.classList.remove('active-like');
+        };
+
+        actionsDiv.appendChild(speakBtn);
+        actionsDiv.appendChild(likeBtn);
+        actionsDiv.appendChild(dislikeBtn);
+        wrapperDiv.appendChild(actionsDiv);
+      }
+
+      messagesContainer.appendChild(wrapperDiv);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       return id;
     }
 
     function updateMessage(id, text) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.textContent = text;
+      const wrapperEl = document.getElementById(id);
+      if (wrapperEl) {
+        const msgEl = wrapperEl.querySelector('.pch-msg');
+        if (msgEl) {
+          msgEl.innerHTML = formatMessageText(text);
+        }
+
+        // Attach action buttons now that loading is complete
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'pch-msg-actions';
+
+        const speakBtn = document.createElement('button');
+        speakBtn.className = 'pch-action-btn';
+        speakBtn.title = 'Read Aloud';
+        speakBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07l-1.41-1.42a3 3 0 0 0 0-4.24l1.41-1.41z"/></svg>';
+        speakBtn.onclick = () => speakText(text);
+
+        const likeBtn = document.createElement('button');
+        likeBtn.className = 'pch-action-btn';
+        likeBtn.title = 'Like';
+        likeBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3z"/></svg>';
+        likeBtn.onclick = () => {
+          likeBtn.classList.toggle('active-like');
+          dislikeBtn.classList.remove('active-dislike');
+        };
+
+        const dislikeBtn = document.createElement('button');
+        dislikeBtn.className = 'pch-action-btn';
+        dislikeBtn.title = 'Dislike';
+        dislikeBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3z"/></svg>';
+        dislikeBtn.onclick = () => {
+          dislikeBtn.classList.toggle('active-dislike');
+          likeBtn.classList.remove('active-like');
+        };
+
+        actionsDiv.appendChild(speakBtn);
+        actionsDiv.appendChild(likeBtn);
+        actionsDiv.appendChild(dislikeBtn);
+        wrapperEl.appendChild(actionsDiv);
+
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
     }
