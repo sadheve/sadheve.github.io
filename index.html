@@ -286,51 +286,50 @@ whop.track("page");
 	<div id="webchat-container"></div>
 
   <!-- Your Botpress Scripts -->
-<!-- Load the WebChat.js Client Engine Engine -->
-<script src="https://pages.dev"></script>
+<!-- Load the WebChat.js Core Script Engine -->
+<script src="https://webchat-js.pages.dev/webchat.min.js"></script>
 
-<!-- Custom CSS Overrides to Remove Gradients, Emojis, and Shrink Chat Bubbles -->
+<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter Text -->
 <style>
-  /* Force a solid orange layout header instead of a gradient */
+  /* 1. Force a solid orange header layout instead of standard gradients */
   #sc-hdr {
     background: #e85b24 !important;
+    background-image: none !important;
     box-shadow: none !important;
   }
   #sc-hdr::before {
     display: none !important;
   }
 
-  /* Force solid orange background colors for the toggle buttons */
+  /* 2. Convert interface action triggers to flat solid orange */
   #sc-toggle, #sc-send, .sc-mav {
     background: #e85b24 !important;
     background-image: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
   }
 
-  /* Make user chat bubbles a compact solid orange without gradients */
+  /* 3. Compact user chat bubble scaling (No Gradients) */
   .sc-bbl.u {
     background: #e85b24 !important;
     background-image: none !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
     padding: 8px 12px !important; 
-    font-size: 12px !important;
+    font-size: 12.5px !important;
   }
 
-  /* Make bot chat bubbles slightly smaller and more compact */
+  /* 4. Compact bot chat bubble scaling */
   .sc-bbl.b {
     padding: 8px 12px !important; 
-    font-size: 12px !important;
+    font-size: 12.5px !important;
   }
 
-  /* Safe Hiding: Make only the 0/1000 counter digits invisible without collapsing the structural row wrapper */
+  /* 5. Safe Element Hiding: Wipe counter text digits completely from sight */
   .sc-cc {
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    font-size: 0 !important;
+    display: none !important;
   }
 </style>
 
-<!-- Connect the Widget to your Hidden Serverless Backend Function -->
+<!-- Initialize the Chat Interface Component -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     new WebChat({
@@ -340,6 +339,8 @@ whop.track("page");
       accentColor: '#e85b24', 
       theme: 'dark',
       lazyLoad: true,
+      
+      // Removed greeting emojis explicitly from layout string
       welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today?', 
       
       customSubmitHandler: async (userMessage) => {
@@ -355,9 +356,8 @@ whop.track("page");
   });
 </script>
 
-<!-- Visual placeholder rendering the chat widget interface launcher -->
+<!-- The visual placeholder targeting where the widget button mounts -->
 <div id="webchat-container"></div>
-
 
 <!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
 	
