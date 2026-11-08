@@ -287,9 +287,9 @@ whop.track("page");
 
   <!-- Your Botpress Scripts -->
 <!-- Load the WebChat.js Core Script Engine -->
-<script src="https://webchat-js.pages.dev/webchat.min.js"></script>
+<script src="https://pages.dev"></script>
 
-<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter/Branding, Enable Scrolling -->
+<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter/Branding, Enable Scrolling, Custom Icons, Hide Buttons -->
 <style>
   /* 1. Force a solid orange header layout instead of standard gradients */
   #sc-hdr {
@@ -323,18 +323,21 @@ whop.track("page");
     font-size: 12.5px !important;
   }
 
-  /* 5. Safe Element Hiding: Wipe counter text digits completely from sight */
+  /* 5. Hides character counter numerical digits */
   .sc-cc {
     display: none !important;
   }
 
-  /* 6. Hide the specific header action buttons (Search, Download, Info) */
+  /* 6. Thoroughly hide header extra buttons (Search, Download, Info, AND Expand) */
   #sc-win #sc-sound-btn + button, 
-  #sc-win #sc-expand-btn + button, 
+  #sc-win #sc-expand-btn,
+  #sc-expand-btn,
   #sc-win #sc-export-btn + button, 
   .sc-ib[title="Search"], 
   .sc-ib[title="Info"],
   .sc-ib[title="Export"],
+  .sc-ib[title="Expand"],
+  .sc-ib[title="Minimize"] + button,
   #sc-export-btn,
   #sc-info-modal {
     display: none !important;
@@ -352,26 +355,34 @@ whop.track("page");
   /* 8. Fix scrolling parameters to allow smooth container navigation */
   #sc-msgs {
     overflow-y: auto !important;
+    overflow-x: hidden !important;
     max-height: calc(100% - 120px) !important;
     pointer-events: auto !important;
   }
 
   /* 9. Replace robot asset logo with a minimal clean chat support icon */
-  .sc-av svg, .sc-mav svg {
+  .sc-av img, .sc-av svg, .sc-mav svg, .sc-av-img {
     display: none !important;
+  }
+  .sc-av, .sc-mav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #e85b24 !important;
   }
   .sc-av::before, .sc-mav::before {
     content: '';
     display: block;
-    width: 18px;
-    height: 18px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
   }
 </style>
 
-<!-- Initialize the Pure Frontend Client-Side Chat Component -->
+<!-- Initialize the Secure Proxy Component -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     new WebChat({
@@ -381,33 +392,22 @@ whop.track("page");
       accentColor: '#e85b24', 
       theme: 'dark',
       lazyLoad: true,
-      
-      // Welcome message customized without greeting emojis
       welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? Prompt response available below.', 
       
-      // Pure frontend handler executing API queries securely using your Google Cloud referrer restrictions
+      // Routes messages to your private hidden Vercel server proxy backend route
       customSubmitHandler: async (userMessage) => {
         try {
-          const apiKey = "AIzaSyD1kkuwuI4hHzHKeOWO452J9UPF3yi3-9Y"; // <-- Paste your domain-restricted Gemini API key here
+          // Replace this placeholder link with your exact secure Vercel production link from Part 1
+          const vercelUrl = "https://YOUR_VERCEL_PROJECT_LINK.vercel.app/api/chat";
           
-          const res = await fetch(`https://googleapis.com{apiKey}`, {
+          const res = await fetch(vercelUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [{ text: userMessage + " (Context: Keep your response helpful and add exactly 2 matching emojis at the end of your complete reply.)" }]
-              }]
-            })
+            body: JSON.stringify({ message: userMessage })
           });
-          
-          if (!res.ok) throw new Error("API authorization failed");
           const data = await res.json();
-          
-          // Extracts text output cleanly out of Google's direct JSON structure layout
-          return data.candidates[0].content.parts[0].text;
-          
+          return data.reply;
         } catch (error) {
-          console.error("Direct API Call Error:", error);
           return "I am experiencing unexpected connection parameters right now. Please try submitting your query again in a quick second! 🛠️⚠️";
         }
       }
