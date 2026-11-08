@@ -289,9 +289,38 @@ whop.track("page");
 <!-- Load the WebChat.js Core Script Engine -->
 <script src="https://pages.dev"></script>
 
-<!-- Clean CSS Rules: No Gradients, Small Bubbles, No Counter/Branding, Enable Scrolling, Custom Icons, Hide Buttons -->
+<!-- Clean CSS Rules: Layering Firewalls, Small Bubbles, No Counter/Branding, Custom Icons, Hide Buttons -->
 <style>
-  /* 1. Force a solid orange header layout instead of standard gradients */
+  /* ROOT LAYER FORCE: Ensure the wrapper element floats on the true top screen layout */
+  body #webchat-container, 
+  html body div#webchat-container {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    width: auto !important;
+    height: auto !important;
+    z-index: 2147483647 !important; /* Maximum possible browser layer height */
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Force the round toggle icon to display correctly at the bottom right corner */
+  body #sc-toggle, 
+  html body button#sc-toggle {
+    position: fixed !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    z-index: 2147483647 !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background: #e85b24 !important;
+    background-image: none !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+  }
+
+  /* Force a solid orange header layout instead of standard gradients */
   #sc-hdr {
     background: #e85b24 !important;
     background-image: none !important;
@@ -301,14 +330,14 @@ whop.track("page");
     display: none !important;
   }
 
-  /* 2. Convert interface action triggers to flat solid orange */
-  #sc-toggle, #sc-send, .sc-mav {
+  /* Convert interface action triggers to flat solid orange */
+  #sc-send, .sc-mav {
     background: #e85b24 !important;
     background-image: none !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
   }
 
-  /* 3. Compact user chat bubble scaling (No Gradients) */
+  /* Compact user chat bubble scaling (No Gradients) */
   .sc-bbl.u {
     background: #e85b24 !important;
     background-image: none !important;
@@ -317,18 +346,18 @@ whop.track("page");
     font-size: 12.5px !important;
   }
 
-  /* 4. Compact bot chat bubble scaling */
+  /* Compact bot chat bubble scaling */
   .sc-bbl.b {
     padding: 8px 12px !important; 
     font-size: 12.5px !important;
   }
 
-  /* 5. Hides character counter numerical digits */
+  /* Hides character counter numerical digits */
   .sc-cc {
     display: none !important;
   }
 
-  /* 6. Thoroughly hide header extra buttons (Search, Download, Info, AND Expand) */
+  /* Thoroughly hide header extra buttons (Search, Download, Info, AND Expand) */
   #sc-win #sc-sound-btn + button, 
   #sc-win #sc-expand-btn,
   #sc-expand-btn,
@@ -343,7 +372,7 @@ whop.track("page");
     display: none !important;
   }
 
-  /* 7. Hide the lower branding text layout completely */
+  /* Hide the lower branding text layout completely */
   #sc-brand, .sc-brand {
     display: none !important;
     visibility: hidden !important;
@@ -352,7 +381,7 @@ whop.track("page");
     padding: 0 !important;
   }
 
-  /* 8. Fix scrolling parameters to allow smooth container navigation */
+  /* Fix scrolling parameters to allow smooth container navigation */
   #sc-msgs {
     overflow-y: auto !important;
     overflow-x: hidden !important;
@@ -360,7 +389,7 @@ whop.track("page");
     pointer-events: auto !important;
   }
 
-  /* 9. Replace robot asset logo with a minimal clean chat support icon */
+  /* Replace robot asset logo with a minimal clean chat support icon */
   .sc-av img, .sc-av svg, .sc-mav svg, .sc-av-img {
     display: none !important;
   }
@@ -394,7 +423,6 @@ whop.track("page");
       lazyLoad: true,
       welcomeMessage: 'Welcome to Sadheve Dias Portfolio. I am here to answer any questions you have about what we do. How can I help you today? Prompt response available below.', 
       
-      // Fixed: Now points directly to your unique, working live secure Vercel application route path
       customSubmitHandler: async (userMessage) => {
         try {
           const res = await fetch('https://vercel.app', {
