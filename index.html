@@ -286,29 +286,21 @@ whop.track("page");
 	<div id="webchat-container"></div>
 
   <!-- Your Botpress Scripts -->
-<!-- Load the WebChat.js Stylesheet and Script -->
-<link rel="stylesheet" href="https://jsdelivr.net">
-<script src="https://jsdelivr.net"></script>
-
-<!-- Initialize the Chat Widget -->
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    new WebChat({
-      elementId: 'webchat-container',
-      apiKey: 'AIzaSyD1kkuwuI4hHzHKeOWO452J9UPF3yi3-9Y', // <-- Paste your restricted API key here
-      provider: 'gemini',
-      model: 'gemini-1.5-flash',
-      contextUrl: '/bot-context.json', 
-      theme: {
-        primaryColor: '#0070f3',
-        botName: 'AI Assistant',
-        welcomeMessage: 'Hi! I am your AI assistant. Ask me anything about Sadheve\'s design services, portfolio projects, or how to get in touch!'
-      }
-    });
-  });
+<!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
+<script 
+  src="https://webchat-js.pages.dev/webchat.min.js" 
+  data-webchat 
+  data-bot-name="AI Assistant" 
+  data-primary-color="#e85b24" 
+  data-accent-color="#ffffff" 
+  data-position="bottom-right" 
+  data-theme="dark" 
+  data-lazy-load="true" 
+  data-lazy-scrape="true" 
+  data-enable-popup="true">
 </script>
-
-<!-- The visual placeholder for the chat widget button -->
+<!-- WebChat.js Drop-in Script Tag (100% Safe & Keyless Setup) -->
+	
 <div id="webchat-container"></div>
 
 	<!-- Start of bodyEnd -->
