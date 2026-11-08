@@ -1,5 +1,4 @@
-import fs from 'fs';
-import path from 'path';
+import botContext from '../bot-context.json' assert { type: 'json' };
 
 export default async function handler(req, res) {
   // Enable CORS headers
@@ -27,14 +26,8 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GEMINI_API_KEY is missing in Vercel environment variables.' });
     }
 
-    // Read bot-context.json from the root directory
-    let contextData = '';
-    try {
-      const filePath = path.join(process.cwd(), 'bot-context.json');
-      contextData = fs.readFileSync(filePath, 'utf8');
-    } catch (err) {
-      console.warn('Could not read bot-context.json:', err);
-    }
+    // Convert the imported JSON object into a string for the system prompt
+    const contextData = JSON.stringify(botContext, null, 2);
 
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     
