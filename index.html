@@ -355,6 +355,7 @@ whop.track("page");
     justify-content: space-between !important;
     font-weight: bold !important;
     font-size: 14px !important;
+    flex-shrink: 0 !important;
   }
   .pch-close {
     background: none !important;
@@ -366,12 +367,13 @@ whop.track("page");
 
   /* Chat Messages Area */
   .pch-messages {
-    flex: 1 !important;
+    flex: 1 1 auto !important;
     padding: 16px !important;
     overflow-y: auto !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 14px !important;
+    min-height: 0 !important;
   }
 
   /* Message wrappers */
@@ -457,6 +459,7 @@ whop.track("page");
     overflow-x: auto !important;
     white-space: nowrap !important;
     border-top: 1px solid #282828 !important;
+    flex-shrink: 0 !important;
   }
   .pch-suggestions::-webkit-scrollbar {
     display: none;
@@ -485,6 +488,7 @@ whop.track("page");
     border-top: 1px solid #333 !important;
     display: flex !important;
     gap: 8px !important;
+    flex-shrink: 0 !important;
   }
   .pch-input {
     flex: 1 !important;
@@ -521,8 +525,8 @@ whop.track("page");
       left: 0 !important;
       top: 0 !important;
       width: 100vw !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
+      height: 100dvh !important; /* Uses dynamic viewport height for mobile browsers */
+      max-height: 100dvh !important;
       border-radius: 0 !important;
       border: none !important;
     }
