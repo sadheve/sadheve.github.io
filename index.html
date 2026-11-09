@@ -304,7 +304,7 @@ whop.track("page");
     border-radius: 50% !important;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
     cursor: pointer !important;
-    transition: transform 0.2s ease !important;
+    transition: transform 0.2s ease, opacity 0.2s ease !important;
   }
   #portfolio-chat-toggle:hover {
     transform: scale(1.05);
@@ -513,19 +513,25 @@ whop.track("page");
     cursor: pointer !important;
   }
 
-  /* Mobile Responsive Full-Screen */
+  /* Mobile Responsive Full-Screen & Hide Toggle when Active */
   @media (max-width: 768px) {
     #portfolio-chat-toggle {
       bottom: 20px !important;
       right: 20px !important;
     }
+
+    /* Hides the floating toggle bubble when chat modal is open on mobile */
+    body.pch-chat-open #portfolio-chat-toggle {
+      display: none !important;
+    }
+
     #portfolio-chat-window {
       bottom: 0 !important;
       right: 0 !important;
       left: 0 !important;
       top: 0 !important;
       width: 100vw !important;
-      height: 100dvh !important; /* Uses dynamic viewport height for mobile browsers */
+      height: 100dvh !important;
       max-height: 100dvh !important;
       border-radius: 0 !important;
       border: none !important;
@@ -576,9 +582,10 @@ whop.track("page");
     const messagesContainer = document.getElementById('pch-messages');
     const suggestionChips = document.querySelectorAll('.pch-suggestion-chip');
 
-    // Toggle window visibility
+    // Toggle window visibility and manage body state for hiding button
     toggleBtn.addEventListener('click', () => {
       chatWindow.classList.toggle('active');
+      document.body.classList.toggle('pch-chat-open', chatWindow.classList.contains('active'));
       if (chatWindow.classList.contains('active')) {
         inputField.focus();
       }
@@ -586,6 +593,7 @@ whop.track("page");
 
     closeBtn.addEventListener('click', () => {
       chatWindow.classList.remove('active');
+      document.body.classList.remove('pch-chat-open');
     });
 
     // Send message core handler
